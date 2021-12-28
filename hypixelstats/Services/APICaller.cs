@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Collections.ObjectModel;
 using hypixelstats.Model;
+using hypixelstats.Exceptions;
 using Newtonsoft.Json;
 
 namespace hypixelstats.Services
@@ -54,16 +55,27 @@ namespace hypixelstats.Services
 
         public async Task<Player> GetPlayer(string playerName)
         {
-            string uuid = await GetPlayerUUID(playerName);
+            Console.WriteLine("APICaller - Chiamata GetPlayer() async");
+            string uuid;
+            try
+            {
+                uuid = await GetPlayerUUID(playerName);
+            }
+            catch(NoContentException e)
+            {
+                return null;
+            }
+
             if (uuid != null)
             {
-                string CompleteUrl = BaseURL + $"player?uuid{uuid}";
+                Console.WriteLine("APICaller - Player UUID: " + uuid);
+                string CompleteUrl = BaseURL + $"player?uuid={uuid}&key={Keys.APIKey}";
                 HttpClient client = new HttpClient();
 
                 HttpResponseMessage response = await client.GetAsync(CompleteUrl);
 
                 var result = await response.Content.ReadAsStringAsync();
-                var json = JsonConvert.DeserializeObject<APISuccessModel>(result);
+                var json = JsonConvert.DeserializeObject<APICheckSuccessModel>(result);
 
                 if (json.success)
                 {
@@ -87,13 +99,21 @@ namespace hypixelstats.Services
 
             HttpResponseMessage response = await client.GetAsync(RequestUrl);
 
+            Console.WriteLine($"GetPlayerUUID - {response.StatusCode}");
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var result = await response.Content.ReadAsStringAsync();
 
                 var json = JsonConvert.DeserializeObject<PlayerToUUID>(result);
 
-                return json.uuid;
+                Console.WriteLine($"GetPlayerUUID - Risultato dell'UUID: {json.id}");
+
+                return json.id;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                throw new NoContentException("Errore nel recupero dell'UUID.");
             }
 
             return null;

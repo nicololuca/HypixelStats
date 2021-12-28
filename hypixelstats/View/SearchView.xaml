@@ -5,17 +5,19 @@
     xmlns:viewmodel="clr-namespace:hypixelstats.ViewModel"
     x:Class="hypixelstats.View.SearchView"
     Title="Cerca"
-    Padding="0 10 0 10">
+    Padding="0, 10, 0, 10">
     <ContentPage.BindingContext>
         <viewmodel:SearchResultViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <ScrollView>
             <StackLayout HorizontalOptions="FillAndExpand">
-                <Entry Text="{Binding SearchFieldContent}" />
+                <SearchBar Text="{Binding SearchFieldContent}" />
                 <Button Text="Cerca"
-                        VerticalOptions="CenterAndExpand"
-                        HorizontalOptions="Center"/>
+                        Command="{Binding getPlayer}"/>
+
+                <Label Text="{Binding Player.rank}"/>
+                <Label Text="{Binding Player.displayname}"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using hypixelstats.Model;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using System.Windows.Input;
+using hypixelstats.Model;
 using hypixelstats.Services;
 
 namespace hypixelstats.ViewModel
@@ -11,9 +12,18 @@ namespace hypixelstats.ViewModel
     public class SearchResultViewModel: INotifyPropertyChanged
     {
         IAPICaller apiCaller = DependencyService.Get<IAPICaller>();
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         private Player player;
         private string searchFieldContent;
+
+        public ICommand getPlayer { get; }
+
+        public SearchResultViewModel()
+        {
+            getPlayer = new Command(GetPlayer);
+        }
 
         public Player Player
         {
@@ -28,11 +38,17 @@ namespace hypixelstats.ViewModel
         public string SearchFieldContent
         {
             get { return searchFieldContent; }
-            set { searchFieldContent = value; }
+            set
+            {
+                searchFieldContent = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SearchFieldContent"));
+            }
         }
 
         public async void GetPlayer()
         {
+            Console.WriteLine("SearchViewModel - Chiamata GetPlayer()");
+            Console.WriteLine($"SearchViewModel - Casella di testo: {searchFieldContent}");
             this.Player = await apiCaller.GetPlayer(searchFieldContent);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 namespace hypixelstats.Model
 {
-    public class APISuccessModel
+    public class APICheckSuccessModel
     {
         public bool success { get; set; }
     }
