@@ -21,10 +21,12 @@
     <None Remove="Services\" />
     <None Remove="View\" />
     <None Remove="Newtonsoft.Json" />
+    <None Remove="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Services\" />
     <Folder Include="View\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>
