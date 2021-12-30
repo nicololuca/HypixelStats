@@ -4,20 +4,38 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:viewmodel="clr-namespace:hypixelstats.ViewModel"
     x:Class="hypixelstats.View.SearchView"
-    Title="Cerca"
-    Padding="0, 10, 0, 10">
+    Title="Cerca">
     <ContentPage.BindingContext>
         <viewmodel:SearchResultViewModel/>
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <ScrollView>
-            <StackLayout HorizontalOptions="FillAndExpand">
-                <SearchBar Text="{Binding SearchFieldContent}" />
+            <StackLayout Padding="10, 0, 10, 0">
+                <SearchBar Text="{Binding SearchFieldContent}"
+                           SearchCommand="{Binding getPlayer}"/>
                 <Button Text="Cerca"
                         Command="{Binding getPlayer}"/>
 
-                <Label Text="{Binding Player.rank}"/>
-                <Label Text="{Binding Player.displayname}"/>
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   Color="Red"
+                                   IsVisible="{Binding IsLoading}"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"/>
+
+                <Label FontSize="Title"
+                       FontAttributes="Bold"
+                       Text="Informazioni sul player"
+                       IsVisible="{Binding AreResultsShown}"/>
+
+                <StackLayout Orientation="Horizontal"
+                             Spacing="10">
+                    <Label Text="{Binding Player.rank}"
+                           FontAttributes="Bold"
+                           IsVisible="{Binding AreResultsShown}"/>
+                    <Label Text="{Binding Player.username}"
+                           FontAttributes="Bold"
+                           IsVisible="{Binding AreResultsShown}"/>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
